@@ -1,4 +1,7 @@
 #include <functional>
+#include <cstring>
+
+const int MAX_SIZE = 10;
 
 template <typename T, typename Compare = std::less<T>>
 class QSort {
@@ -31,5 +34,41 @@ private:
         T temp = a;
         a = b;
         b = temp;
+    }
+};
+
+template <>
+class QSort<char> {
+public:
+    static void sort(char arr[][MAX_SIZE], int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+
+            sort(arr, low, pi - 1);
+            sort(arr, pi + 1, high);
+        }
+    }
+
+private:
+    static int partition(char arr[][MAX_SIZE], int low, int high) {
+        char pivot[MAX_SIZE];
+        strcpy_s(pivot, MAX_SIZE, arr[high]);
+        int i = low - 1;
+
+        for (int j = low; j <= high - 1; j++) {
+            if (strcmp(arr[j], pivot) < 0) {
+                i++;
+                swap(arr[i], arr[j]);
+            }
+        }
+        swap(arr[i + 1], arr[high]);
+        return (i + 1);
+    }
+
+    static void swap(char a[], char b[]) {
+        char temp[MAX_SIZE];
+        strcpy_s(temp, MAX_SIZE, a);
+        strcpy_s(a, MAX_SIZE, b);
+        strcpy_s(b, MAX_SIZE, temp);
     }
 };
